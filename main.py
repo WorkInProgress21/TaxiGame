@@ -4,8 +4,8 @@ taxiSprite=pg.image.load("Assets/taxi.png")
 
 class Game:
     def __init__(self):
-        pg.init
-        self.display=pg.display.set_mode((800, 600))
+        pg.init()
+        self.display=pg.display.set_mode((1000, 800))
         pg.display.set_caption("Taxi Game")
 
         self.taxiX=400
@@ -13,35 +13,45 @@ class Game:
 
         self.carSpeedX=0
         self.carSpeedY=0
+        self.angle=180
 
+        self.turnSpeed=3
         self.maxSpeed=25
-
+        self.acceleration=2
         self.drag=2
 
+        self.taxi=0
+
     def draw(self):
-        self.display.blit(taxiSprite,(self.taxiX,self.taxiY))
+            self.display.fill("darkslategray")
         
 
     def run(self):
         while (True):
-            pg.display.flip()
-            self.getInput()
-            self.handleTaxi()
             self.draw()
+            self.handleInput()
+            self.handleTaxi()
+            pg.display.flip()
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     pg.quit()
 
-    def getInput(self):
-        return pg.key.get_pressed()
+    def handleInput(self):
+        key=pg.key.get_pressed()
+
+        if key[pg.K_a]:
+            self.angle+=self.turnSpeed
+
+        if key[pg.K_d]:
+            self.angle-=self.turnSpeed
+
+        
 
     def handleTaxi(self):
-        key=self.getInput()
+        #self.carSpeedY-=self.drag
+        self.taxi=pg.transform.rotate(taxiSprite,self.angle)
+        self.display.blit(self.taxi,(self.taxiX,self.taxiY))
 
-        if (key==pg.K_w):
-            if (self.carSpeedY+5>self.maxSpeed):
-                self.carSpeedY+(abs(5-self.carSpeedY))
-                self.taxiq+=self.carSpeedY
 
         
 
